@@ -1,16 +1,16 @@
-# allergy challenge
-Nodejs app
+# Allergy App
 
-# How to run
+## How to run
+visit the app @ https://szaf-allergy-app.herokuapp.com/
 
-1. Clone Repo to local machine
-2. From the root director of project, run : `npm install`
-3. In the console, run: `node src/app.js`
-4. The results should appear in the console from the search. 
+1. On the index page, enter in a given (first) name in the first field.
+2. Enter a family (last) name in the second field.
+3. Click the button to submit. 
+4. The query will take a few seconds. The information should populate the page for the queried patient.
 
-If you want to modify the search criteria, change the SQL query in `src/appjs`
+The data this application is querying is fake, simulated data so the names are particular. There are three names provided on the index page that are known working names.
 
-# About
-This project was made as part of a coding challenge using 1up Health's api and sample data.
+## About
+This project was made to showcase the use of Node as a back-end library, the use of Presto for sql queries, and to utalize the 1up Health api.
 
-Data is from http://34.74.56.14
+Information about the data and 1up Health can be found here: http://34.74.56.14/index.html
