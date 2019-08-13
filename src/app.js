@@ -1,88 +1,68 @@
-// Set up JDBC connection
-var presto = require('presto-client')
-var client = new presto.Client({user: 'presto', host: '34.74.56.14', catalog: 'hive', schema: 'leap'})
+const path = require('path')
+const express = require('express')
+const hbs = require('hbs')
 
-// sample allergy data
-// {"resourceType":"AllergyIntolerance","id":"6ea84b5b-958e-46e4-9bc1-b433759e054d","onset":"2018-07-28T01:24:50+00:00","patient":{"reference":"urn:uuid:8f26f086-222e-44eb-936b-8dae1171182c"},"substance":{"coding":[{"system":"http://snomed.info/sct","code":"419474003","display":"Allergy to mould"}],"text":"Allergy to mould"},"status":"active","criticality":"CRITL","type":"allergy","category":"food","meta":{}}
+// nodemon src/app.js -e js,hbs
+const app = express()
+const port = process.env.PORT || 3000
 
-// hard coded query
-// var query = "SELECT " +
-//               "json_extract_scalar(a.json,'$.substance.coding[0].code'), " +
-//               "json_extract_scalar(a.json,'$.substance.coding[0].display') FROM allergyintolerance a " +
-//               "WHERE " +
-//               "json_extract_scalar(a.json,'$.patient.reference') = 'urn:uuid:75e27c31-0174-4987-ba61-39422d381905'"
+// define paths for Express config
+const publicDirectoryPath = path.join(__dirname, "../public")
+const viewsPath = path.join(__dirname, "../templates/views")
+const partialsPath = path.join(__dirname, "../templates/partials")
 
-// var query = "SELECT " +
-//               "json_extract_scalar(json, '$.id'), " +
-//               "json_extract_scalar(json,'$.name[0].family[0]'), " +
-//               "json_extract_scalar(json,'$.name[0].given[0]') from patient p " +
-//               "WHERE json_extract_scalar(json,'$.id') = '8f26f086-222e-44eb-936b-8dae1171182c'"
+// Setup handlebars engine and locations
+app.set('view engine', 'hbs')
+app.set('views', viewsPath)
+hbs.registerPartials(partialsPath)
 
-// Construct SQL query
-var query = "SELECT " +
-              "json_extract_scalar(a.json,'$.substance.coding[0].code'), " +
-              "json_extract_scalar(a.json,'$.substance.coding[0].display') FROM allergyintolerance a " +
-              "JOIN patient p " +
-              "ON " +
-              "json_extract_scalar(a.json,'$.patient.reference') = " +
-              "CONCAT('urn:uuid:', json_extract_scalar(p.json,'$.id')) " +
-              // "WHERE json_extract_scalar(p.json,'$.name[0].family[0]')  = 'Zboncak558' " +
-              // "AND json_extract_scalar(p.json,'$.name[0].given[0]') = 'Marshall526'"
-              "WHERE json_extract_scalar(p.json,'$.name[0].family[0]')  = 'Rascón630' " +
-              "AND json_extract_scalar(p.json,'$.name[0].given[0]') = 'Eduardo902'"
+// Setup static directory to serve
+app.use(express.static(publicDirectoryPath))
 
-// #####################
+app.get('', (req, res) => {
+  res.render('index', {
+    title: "Weather App"
+  })
+})
 
+app.get('/about', (req, res) => {
+  res.render('about', {
+    title: "About the app"
+  })
+})
 
-// 75e27c31-0174-4987-ba61-39422d381905
+// app.get('/weather', (req, res) => {
+//   if (!req.query.address) {
+//     return res.send({
+//       error: 'You must provide an address'
+//     })
+//   }
+//
+//   geocode(req.query.address, (error, { latitude, longitude, location } = {}) => {
+//     if (error) {
+//       return res.send({ error })
+//     }
+//     forecast(longitude, latitude, (error, forecastData) => {
+//       if (error) {
+//         return res.send({ error })
+//       }
+//       return res.send({
+//         forecast: forecastData,
+//         location,
+//         address: req.query.address
+//       })
+//     })
+//   })
+// })
 
-// var query = "SELECT " +
-//               "json_extract_scalar(json, '$.id'), " +
-//               "json_extract_scalar(json,'$.name[0].family[0]'), " +
-//               "json_extract_scalar(json,'$.name[0].given[0]') from patient p " +
-//               "WHERE json_extract_scalar(json,'$.name[0].family[0]')  = 'Zboncak558' " +
-//               "AND json_extract_scalar(json,'$.name[0].given[0]') = 'Marshall526'"
+app.get('*', (req, res) => {
+  res.render('404', {
+    title: '404',
+    name: "Joe Szaf",
+    errorMessage: 'Page not found.'
+  })
+})
 
-
-
-
-              // "json_extract_scalar(json,'$.name[0].family[0]'), " +
-              // "json_extract_scalar(json,'$.name[0].given[0]') from patient p " +
-              // "WHERE json_extract_scalar(json,'$.name[0].family[0]')  = 'Zboncak558' " +
-              // "AND json_extract_scalar(json,'$.name[0].given[0]') = 'Marshall526'"
-              // "JOIN immunization i " +
-              // "ON (split_part(json_extract_scalar(i.json, '$.patient.reference'), ':', 3) = json_extract_scalar(p.json, '$.id')) " +
-              // "WHERE " +
-              // "json_extract_scalar(p.json, '$.birthDate') > '2005-01-01' " +
-              // "AND json_extract_scalar(p.json, '$.birthDate') < '2005-12-31' " +
-              // "AND json_extract_scalar(p.json, '$.address[0].city') = 'Boston' " +
-              // "AND (split_part(json_extract_scalar(p.json, '$.careProvider[0].reference'), ':', 2) = " +
-              // "json_extract_scalar(dr.json, '$.id')) " +
-              // "AND (json_extract_scalar(i.json, '$.vaccineCode.coding[0].code') = '62' " +
-              // "OR json_extract_scalar(i.json, '$.vaccineCode.coding[0].code') = '114' " +
-              // "OR json_extract_scalar(i.json, '$.vaccineCode.coding[0].code') = '115') " +
-              // "ORDER BY json_extract_scalar(p.json, '$.name[0].family[0]'), " +
-              // "json_extract_scalar(p.json, '$.name[0].given[0]') ";
-
-let queriedData = []
-
-// Query the Analytics Engine
-client.execute({
-    query:   query,
-    catalog: 'hive',
-    schema:  'leap',
-    state:   function(error, query_id, stats){
-      console.log({message:"status changed", id:query_id, stats:stats})
-    },
-    columns: function(error, data){
-       console.log({resultColumns: data})
-     },
-    data:    function(error, data, columns, stats){
-      queriedData = data
-      console.log("queriedData:", queriedData)
-    },
-    success: function(error, stats){},
-    error:   function(error){
-      console.log('e', error)
-    }
-});
+app.listen(port, () => {
+  console.log(`Server is up on port ${port}.`)
+})
