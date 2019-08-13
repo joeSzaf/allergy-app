@@ -2,6 +2,8 @@ const path = require('path')
 const express = require('express')
 const hbs = require('hbs')
 
+const allergy = require("./utils/allergy")
+
 const app = express()
 
 // Define paths for Express config
@@ -26,6 +28,27 @@ app.get('', (req, res) => {
 app.get('/about', (req, res) => {
   res.render('about', {
     title: "About"
+  })
+})
+
+app.get('/allergies', (req, res) => {
+  if (!req.query.given || !req.query.family) {
+    return res.send({
+      error: 'You must provide a given and family name.'
+    })
+  }
+
+  allergy(req.query.given, req.query.family, (error, allergyData = []) => {
+    if (error) {
+      return res.send({ error })
+    }
+    return res.send({
+      allergyData,
+      patient: {
+        givenName: req.query.given,
+        familyName: req.query.family
+      }
+    })
   })
 })
 

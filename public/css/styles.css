@@ -4,6 +4,7 @@ body {
   max-width: 650px;
   margin: 0 auto;
   padding: 0 16px;
+  font-size: 1em;
 
   display: flex;
   flex-direction: column;
@@ -52,4 +53,13 @@ button {
   background: #888;
   color: white;
   padding: 8px;
+}
+
+h5 {
+  color: #888;
+}
+
+.example-names {
+  color: #888;
+  font-size: 0.8em;
 }
