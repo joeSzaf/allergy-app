@@ -1,21 +1,25 @@
 {
-  "name": "web-server",
+  "name": "allergy-app",
   "version": "1.0.0",
-  "description": "",
+  "description": "Nodejs app",
   "main": "index.js",
   "scripts": {
     "start": "node src/app.js",
     "dev": "nodemon src/app.js -e js,hbs"
   },
-  "keywords": [],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joeSzaf/allergy-app.git"
+  },
   "author": "",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/joeSzaf/allergy-app/issues"
+  },
+  "homepage": "https://github.com/joeSzaf/allergy-app#readme",
   "dependencies": {
     "express": "^4.17.1",
-    "hbs": "^4.0.4",
-    "path": "^0.12.7",
-    "presto-client": "^0.6.0",
-    "request": "^2.88.0"
+    "hbs": "^4.0.4"
   },
   "devDependencies": {
     "nodemon": "^1.19.1"
