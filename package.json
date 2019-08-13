@@ -19,7 +19,8 @@
   "homepage": "https://github.com/joeSzaf/allergy-app#readme",
   "dependencies": {
     "express": "^4.17.1",
-    "hbs": "^4.0.4"
+    "hbs": "^4.0.4",
+    "presto-client": "^0.6.0"
   },
   "devDependencies": {
     "nodemon": "^1.19.1"
